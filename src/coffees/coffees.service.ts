@@ -86,7 +86,14 @@ export class CoffeesService {
     };
   }
 
-  async remove(id: number): Promise<void> {
-    await this.prismaService.coffee.delete({ where: { id } });
+  async remove(id: number): Promise<CoffeeDto> {
+    const coffee = await this.prismaService.coffee.delete({
+      where: { id },
+      include: { flavors: true },
+    });
+    return {
+      ...coffee,
+      flavors: coffee.flavors.map((flavor) => flavor.name),
+    };
   }
 }

@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CoffeeDto {
+  id: Int!
+  name: String!
+  description: String!
+  brand: String!
+  flavors: [String!]!
+}
+
+type Query {
+  coffee(id: Int!): CoffeeDto!
+  coffees(paginationQuery: PaginationQueryDto! = {limit: 30, offset: 0}): [CoffeeDto!]!
+}
+
+input PaginationQueryDto {
+  limit: Int! = 30
+  offset: Int! = 0
+}
+
+type Mutation {
+  createCoffee(createCoffeeDto: CreateCoffeeDto!): CoffeeDto!
+  updateCoffee(id: Int!, updateCoffeeDto: UpdateCoffeeDto!): CoffeeDto!
+  deleteCoffee(id: Int!): CoffeeDto!
+}
+
+input CreateCoffeeDto {
+  name: String!
+  brand: String!
+  description: String! = ""
+  flavors: [String!]!
+}
+
+input UpdateCoffeeDto {
+  name: String
+  brand: String
+  description: String
+  flavors: [String!]
+}

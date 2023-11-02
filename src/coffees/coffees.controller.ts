@@ -8,15 +8,17 @@ import {
   Patch,
   Post,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { CoffeeDto } from './dto/coffee.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
-import { ApiPrismaClientHttpExceptions } from '../prisma/prisma-client-exception.filter';
+import { PrismaClientExceptionFilter, ApiPrismaClientHttpExceptions } from '../prisma/prisma-client-exception.filter';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@UseFilters(PrismaClientExceptionFilter)
 @ApiTags('coffees')
 @Controller('coffees')
 export class CoffeesController {
@@ -55,9 +57,9 @@ export class CoffeesController {
   }
 
   @Delete(':id')
-  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @ApiResponse({ status: HttpStatus.OK })
   @ApiPrismaClientHttpExceptions()
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id') id: number): Promise<CoffeeDto> {
     return this.coffeeService.remove(id);
   }
 }
