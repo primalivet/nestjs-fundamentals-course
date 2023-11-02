@@ -25,14 +25,10 @@ export class CoffeesService {
   }
 
   async findOne(id: number): Promise<CoffeeDto> {
-    const coffee = await this.prismaService.coffee.findUnique({
+    const coffee = await this.prismaService.coffee.findUniqueOrThrow({
       where: { id },
       include: { flavors: true },
     });
-
-    if (!coffee) {
-      throw new Error('ENTITY_NOT_FOUND'); // TODO: Create "ServiceError"
-    }
 
     return {
       ...coffee,
