@@ -11,20 +11,23 @@ import {
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { CoffeeDto } from './dto/coffee.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeeService: CoffeesService) { }
 
   @Get()
-  findAll(@Query() paginationQuery: any) {
-    // const { limit, offset } = paginationQuery;
-    return this.coffeeService.findAll();
+  findAll(
+    @Query() paginationQueryDto: PaginationQueryDto,
+  ): Promise<CoffeeDto[]> {
+    return this.coffeeService.findAll(paginationQueryDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.coffeeService.findOne('' + id);
+    return this.coffeeService.findOne(id);
   }
 
   @Post()
@@ -33,12 +36,12 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+  update(@Param('id') id: number, @Body() updateCoffeeDto: UpdateCoffeeDto) {
     return this.coffeeService.update(id, updateCoffeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.coffeeService.remove(id);
   }
 }
