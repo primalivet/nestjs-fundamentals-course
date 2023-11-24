@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional } from 'class-validator';
 
-@InputType()
+@InputType('UpdateCoffeeInput')
 export class UpdateCoffeeDto {
   @ApiProperty({
     required: false,

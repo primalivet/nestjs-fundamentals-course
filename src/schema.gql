@@ -2,7 +2,8 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type CoffeeDto {
+"""Good cup of brew"""
+type Coffee {
   id: Int!
   name: String!
   description: String!
@@ -11,29 +12,29 @@ type CoffeeDto {
 }
 
 type Query {
-  coffee(id: Int!): CoffeeDto!
-  coffees(paginationQuery: PaginationQueryDto! = {limit: 30, offset: 0}): [CoffeeDto!]!
+  coffee(id: Int!): Coffee!
+  coffees(paginationQuery: PaginationQueryInput! = {limit: 30, offset: 0}): [Coffee!]!
 }
 
-input PaginationQueryDto {
+input PaginationQueryInput {
   limit: Int! = 30
   offset: Int! = 0
 }
 
 type Mutation {
-  createCoffee(createCoffeeDto: CreateCoffeeDto!): CoffeeDto!
-  updateCoffee(id: Int!, updateCoffeeDto: UpdateCoffeeDto!): CoffeeDto!
-  deleteCoffee(id: Int!): CoffeeDto!
+  createCoffee(createCoffee: CreateCoffeeInput!): Coffee!
+  updateCoffee(id: Int!, updateCoffee: UpdateCoffeeInput!): Coffee!
+  deleteCoffee(id: Int!): Coffee!
 }
 
-input CreateCoffeeDto {
+input CreateCoffeeInput {
   name: String!
   brand: String!
   description: String! = ""
   flavors: [String!]!
 }
 
-input UpdateCoffeeDto {
+input UpdateCoffeeInput {
   name: String
   brand: String
   description: String

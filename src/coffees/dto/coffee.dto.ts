@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
-@ObjectType()
+@ObjectType('Coffee', { description: 'Good cup of brew' })
 export class CoffeeDto {
-  @ApiProperty({
-    description: 'The unique identifier of the coffee',
+  @ApiProperty({ description: 'The unique identifier of the coffee',
   })
   @Field(type => Int)
   readonly id: number;

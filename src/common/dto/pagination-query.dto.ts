@@ -2,7 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
-@InputType()
+@InputType('PaginationQueryInput')
 export class PaginationQueryDto {
   @ApiPropertyOptional({
     required: false,

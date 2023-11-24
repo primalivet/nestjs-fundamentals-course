@@ -30,7 +30,7 @@ export class CoffeesResolver {
 
   @Mutation((returns) => CoffeeDto)
   createCoffee(
-    @Args('createCoffeeDto', { type: () => CreateCoffeeDto })
+    @Args('createCoffee', { type: () => CreateCoffeeDto })
     createCoffeeDto: CreateCoffeeDto,
   ) {
     return this.coffeeService.create(createCoffeeDto);
@@ -39,7 +39,7 @@ export class CoffeesResolver {
   @Mutation((returns) => CoffeeDto)
   updateCoffee(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateCoffeeDto', { type: () => UpdateCoffeeDto })
+    @Args('updateCoffee', { type: () => UpdateCoffeeDto })
     updateCoffeeDto: UpdateCoffeeDto,
   ) {
     return this.coffeeService.update(id, updateCoffeeDto);
