@@ -11,7 +11,7 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   readonly name?: string;
 
   @ApiProperty({
@@ -21,7 +21,7 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   readonly brand?: string;
 
   @ApiProperty({
@@ -32,7 +32,7 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field((type) => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   readonly description?: string;
 
   @ApiProperty({
@@ -42,6 +42,6 @@ export class UpdateCoffeeDto {
   })
   @IsString({ each: true })
   @IsOptional()
-  @Field((type) => [String], { nullable: true })
+  @Field(() => [String], { nullable: true })
   readonly flavors?: string[];
 }

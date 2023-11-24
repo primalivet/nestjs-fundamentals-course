@@ -1,34 +1,32 @@
-import { Query, Args, Int, Resolver, Mutation } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Resolver,
+  Mutation,
+  ObjectType,
+  ResolveField,
+} from '@nestjs/graphql';
 import { CoffeeDto } from './dto/coffee.dto';
 import { CoffeesService } from './coffees.service';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PrismaClientExceptionFilterGQL } from '../prisma/prisma-client-exception.filter';
 import { UseFilters } from '@nestjs/common';
 
+@ObjectType('CoffeeMutations')
+class CoffeeMutations { }
+
 @UseFilters(PrismaClientExceptionFilterGQL)
-@Resolver((of) => CoffeeDto)
-export class CoffeesResolver {
+@Resolver(() => CoffeeMutations)
+export class CoffeesMutationsResolver {
   constructor(private readonly coffeeService: CoffeesService) { }
 
-  @Query((returns) => CoffeeDto, { name: 'coffee' })
-  getCoffee(@Args('id', { type: () => Int }) id: number) {
-    return this.coffeeService.findOne(id);
+  @Mutation(() => CoffeeMutations, { name: 'coffeeMutations' })
+  getRoot() {
+    return new CoffeeMutations();
   }
 
-  @Query((returns) => [CoffeeDto], { name: 'coffees' })
-  getCoffees(
-    @Args('paginationQuery', {
-      type: () => PaginationQueryDto,
-      defaultValue: { limit: 30, offset: 0 },
-    })
-    paginationQuery: PaginationQueryDto,
-  ) {
-    return this.coffeeService.findAll(paginationQuery);
-  }
-
-  @Mutation((returns) => CoffeeDto)
+  @ResolveField(() => CoffeeDto, { name: 'create' })
   createCoffee(
     @Args('createCoffee', { type: () => CreateCoffeeDto })
     createCoffeeDto: CreateCoffeeDto,
@@ -36,7 +34,7 @@ export class CoffeesResolver {
     return this.coffeeService.create(createCoffeeDto);
   }
 
-  @Mutation((returns) => CoffeeDto)
+  @ResolveField(() => CoffeeDto, { name: 'update' })
   updateCoffee(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateCoffee', { type: () => UpdateCoffeeDto })
@@ -45,7 +43,7 @@ export class CoffeesResolver {
     return this.coffeeService.update(id, updateCoffeeDto);
   }
 
-  @Mutation((returns) => CoffeeDto)
+  @ResolveField(() => CoffeeDto, { name: 'delete' })
   deleteCoffee(@Args('id', { type: () => Int }) id: number) {
     return this.coffeeService.remove(id);
   }

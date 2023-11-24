@@ -8,6 +8,8 @@ import * as Joi from '@hapi/joi';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { GraphQLFormattedError } from 'graphql';
+import { PostModule } from './post/post.module';
+import { UserModule } from './user.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { GraphQLFormattedError } from 'graphql';
       },
     }),
     CoffeesModule,
+    PostModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -10,7 +10,7 @@ export class CreateCoffeeDto {
     description: 'The name of the coffee',
   })
   @IsString()
-  @Field((type) => String)
+  @Field(() => String)
   readonly name: string;
 
   @ApiProperty({
@@ -19,7 +19,7 @@ export class CreateCoffeeDto {
     description: 'The brand of the coffee',
   })
   @IsString()
-  @Field((type) => String)
+  @Field(() => String)
   readonly brand: string;
 
   @ApiProperty({
@@ -29,7 +29,7 @@ export class CreateCoffeeDto {
     default: '',
   })
   @IsString()
-  @Field((type) => String, { defaultValue: '' })
+  @Field(() => String, { defaultValue: '' })
   readonly description?: string;
 
   @ApiProperty({
@@ -38,6 +38,6 @@ export class CreateCoffeeDto {
     description: 'The flavors of the coffee',
   })
   @IsString({ each: true })
-  @Field((type) => [String])
+  @Field(() => [String])
   readonly flavors: string[];
 }

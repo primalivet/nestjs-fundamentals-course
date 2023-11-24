@@ -11,7 +11,7 @@ type Coffee {
   flavors: [String!]!
 }
 
-type Query {
+type CoffeeQueries {
   coffee(id: Int!): Coffee!
   coffees(paginationQuery: PaginationQueryInput! = {limit: 30, offset: 0}): [Coffee!]!
 }
@@ -21,10 +21,10 @@ input PaginationQueryInput {
   offset: Int! = 0
 }
 
-type Mutation {
-  createCoffee(createCoffee: CreateCoffeeInput!): Coffee!
-  updateCoffee(id: Int!, updateCoffee: UpdateCoffeeInput!): Coffee!
-  deleteCoffee(id: Int!): Coffee!
+type CoffeeMutations {
+  create(createCoffee: CreateCoffeeInput!): Coffee!
+  update(id: Int!, updateCoffee: UpdateCoffeeInput!): Coffee!
+  delete(id: Int!): Coffee!
 }
 
 input CreateCoffeeInput {
@@ -39,4 +39,72 @@ input UpdateCoffeeInput {
   brand: String
   description: String
   flavors: [String!]
+}
+
+type Post {
+  id: String!
+  title: String!
+  votes: Int!
+  authorId: Int!
+}
+
+type PostQueries {
+  posts: [Post!]!
+  post(id: Float!): Post!
+}
+
+type PostMutations {
+  create(createPostInput: CreatePostInput!): Post!
+  update(id: Float!, updatePostInput: UpdatePostInput!): Post!
+}
+
+input CreatePostInput {
+  title: String!
+  votes: Int!
+  authorId: Int!
+}
+
+input UpdatePostInput {
+  title: String
+  votes: Int
+  authorId: Int
+}
+
+type User {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  posts: [Post!]!
+}
+
+type UserQueries {
+  users: [User!]!
+  user(id: Float!): User!
+}
+
+type UserMutations {
+  create(createUserInput: CreateUserInput!): User!
+  update(id: Int!, updateUserInput: UpdateUserDto!): User!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+}
+
+input UpdateUserDto {
+  firstName: String!
+  lastName: String!
+}
+
+type Query {
+  coffeeQueries: CoffeeQueries!
+  postQueries: PostQueries!
+  userQueries: UserQueries!
+}
+
+type Mutation {
+  coffeeMutations: CoffeeMutations!
+  postMutations: PostMutations!
+  userMutations: UserMutations!
 }

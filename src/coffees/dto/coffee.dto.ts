@@ -5,7 +5,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 export class CoffeeDto {
   @ApiProperty({ description: 'The unique identifier of the coffee',
   })
-  @Field(type => Int)
+  @Field(() => Int)
   readonly id: number;
 
   @ApiProperty({
@@ -29,6 +29,6 @@ export class CoffeeDto {
   @ApiProperty({
     description: 'The flavors of the coffee',
   })
-  @Field(type => [String])
+  @Field(() => [String])
   readonly flavors: string[];
 }
