@@ -17,7 +17,7 @@ describe('CoffeesService', () => {
 
   it('', async () => {
     prisma.coffee.findMany = jest.fn().mockReturnValue([]);
-    const found = await service.findAll({ limit: 1, offset: 1 });
+    const found = await service.findAll({ limit: 1, offset: 1 }, true);
     const wanted = [];
 
     expect(prisma.coffee.findMany).toHaveBeenCalledTimes(1);

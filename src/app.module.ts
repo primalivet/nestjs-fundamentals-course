@@ -9,7 +9,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { GraphQLFormattedError } from 'graphql';
 import { PostModule } from './post/post.module';
-import { UserModule } from './user.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,10 +22,13 @@ import { UserModule } from './user.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
-      formatError(error: GraphQLFormattedError): GraphQLFormattedError {
-        const { message } = error;
-        return { message };
-      },
+      formatError:
+        process.env.NODE_ENV === 'production'
+          ? function(error: GraphQLFormattedError): GraphQLFormattedError {
+            const { message } = error;
+            return { message };
+          }
+          : undefined,
     }),
     CoffeesModule,
     PostModule,

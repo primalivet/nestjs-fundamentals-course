@@ -6,12 +6,12 @@ import {
   ObjectType,
   ResolveField,
 } from '@nestjs/graphql';
-import { CoffeeDto } from './dto/coffee.dto';
+import { CreateCoffeeModel } from './models/create-coffee.model';
+import { UpdateCoffeeModel } from './models/update-coffee.model';
 import { CoffeesService } from './coffees.service';
-import { CreateCoffeeDto } from './dto/create-coffee.dto';
-import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PrismaClientExceptionFilterGQL } from '../prisma/prisma-client-exception.filter';
 import { UseFilters } from '@nestjs/common';
+import { CoffeeModel } from './models/coffee.model';
 
 @ObjectType('CoffeeMutations')
 class CoffeeMutations { }
@@ -26,25 +26,26 @@ export class CoffeesMutationsResolver {
     return new CoffeeMutations();
   }
 
-  @ResolveField(() => CoffeeDto, { name: 'create' })
+  @ResolveField(() => CoffeeModel, { name: 'create' })
   createCoffee(
-    @Args('createCoffee', { type: () => CreateCoffeeDto })
-    createCoffeeDto: CreateCoffeeDto,
-  ) {
-    return this.coffeeService.create(createCoffeeDto);
+    @Args('data', { type: () => CreateCoffeeModel }) data: CreateCoffeeModel,
+  ): Promise<CoffeeModel> {
+    return this.coffeeService.create(data, false);
   }
 
-  @ResolveField(() => CoffeeDto, { name: 'update' })
+  @ResolveField(() => CoffeeModel, { name: 'update' })
   updateCoffee(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateCoffee', { type: () => UpdateCoffeeDto })
-    updateCoffeeDto: UpdateCoffeeDto,
-  ) {
-    return this.coffeeService.update(id, updateCoffeeDto);
+    @Args('data', { type: () => UpdateCoffeeModel })
+    data: UpdateCoffeeModel,
+  ): Promise<CoffeeModel> {
+    return this.coffeeService.update(id, data, false);
   }
 
-  @ResolveField(() => CoffeeDto, { name: 'delete' })
-  deleteCoffee(@Args('id', { type: () => Int }) id: number) {
-    return this.coffeeService.remove(id);
+  @ResolveField(() => CoffeeModel, { name: 'delete' })
+  deleteCoffee(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<CoffeeModel> {
+    return this.coffeeService.remove(id, false);
   }
 }

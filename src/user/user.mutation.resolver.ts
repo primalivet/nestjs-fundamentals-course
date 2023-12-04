@@ -7,9 +7,9 @@ import {
   Int,
 } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserDto } from './dto/user.dto';
+import { UserModel } from './models/user.model';
+import { CreateUserModel } from './models/create-user.model';
+import { UpdateUserModel } from './models/update-user.model';
 
 @ObjectType('UserMutations')
 class UserMutations { }
@@ -23,22 +23,27 @@ export class UserMutationsResolver {
     return new UserMutations();
   }
 
-  @ResolveField(() => UserDto, { name: 'create' })
+  @ResolveField(() => UserModel, { name: 'create' })
   async createUser(
-    @Args('createUserInput', { type: () => CreateUserDto })
-    createUserDto: CreateUserDto,
+    @Args('data', { type: () => CreateUserModel }) data: CreateUserModel,
   ) {
-    const user = await this.userService.create(createUserDto);
+    const user = await this.userService.create(data);
     return user;
   }
 
-  @ResolveField(() => UserDto, { name: 'update' })
+  @ResolveField(() => UserModel, { name: 'update' })
   async updateUser(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateUserInput', { type: () => UpdateUserDto })
-    updateUserDto: UpdateUserDto,
+    @Args('data', { type: () => UpdateUserModel })
+    data: UpdateUserModel,
   ) {
-    const user = await this.userService.update(id, updateUserDto);
+    const user = await this.userService.update(id, data);
+    return user;
+  }
+
+  @ResolveField(() => UserModel, { name: 'remove' })
+  async removeUser(@Args('id', { type: () => Int }) id: number) {
+    const user = await this.userService.remove(id);
     return user;
   }
 }

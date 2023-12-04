@@ -1,8 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional } from 'class-validator';
 
-@InputType('UpdateCoffeeInput')
 export class UpdateCoffeeDto {
   @ApiProperty({
     required: false,
@@ -11,7 +9,6 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field(() => String, { nullable: true })
   readonly name?: string;
 
   @ApiProperty({
@@ -21,7 +18,6 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field(() => String, { nullable: true })
   readonly brand?: string;
 
   @ApiProperty({
@@ -32,7 +28,6 @@ export class UpdateCoffeeDto {
   })
   @IsString()
   @IsOptional()
-  @Field(() => String, { nullable: true })
   readonly description?: string;
 
   @ApiProperty({
@@ -42,6 +37,5 @@ export class UpdateCoffeeDto {
   })
   @IsString({ each: true })
   @IsOptional()
-  @Field(() => [String], { nullable: true })
   readonly flavors?: string[];
 }

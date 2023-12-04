@@ -2,41 +2,65 @@ import { Injectable } from '@nestjs/common';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
-import { CoffeeDto } from './dto/coffee.dto';
+import { CoffeeDto, CoffeeWithFlavorsDto } from './dto/coffee.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class CoffeesService {
   constructor(private readonly prismaService: PrismaService) { }
 
-  async findAll(paginationQueryDto: PaginationQueryDto): Promise<CoffeeDto[]> {
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    includeFlavors: true,
+  ): Promise<CoffeeWithFlavorsDto[]>;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    includeFlavors: false,
+  ): Promise<CoffeeDto[]>;
+  async findAll(
+    paginationQueryDto: PaginationQueryDto,
+    includeFlavors = true,
+  ): Promise<CoffeeDto[] | CoffeeWithFlavorsDto[]> {
     const coffees = await this.prismaService.coffee.findMany({
       skip: paginationQueryDto.offset,
       take: paginationQueryDto.limit,
       include: {
-        flavors: true,
+        flavors: includeFlavors,
       },
     });
 
-    return coffees.map((coffee) => ({
-      ...coffee,
-      flavors: coffee.flavors.map((flavor) => flavor.name),
-    }));
+    return coffees;
   }
 
-  async findOne(id: number): Promise<CoffeeDto> {
+  async findOne(
+    id: number,
+    includeFlavors: true,
+  ): Promise<CoffeeWithFlavorsDto>;
+  async findOne(id: number, includeFlavors: false): Promise<CoffeeDto>;
+  async findOne(
+    id: number,
+    includeFlavors = true,
+  ): Promise<CoffeeDto | CoffeeWithFlavorsDto> {
     const coffee = await this.prismaService.coffee.findUniqueOrThrow({
       where: { id },
-      include: { flavors: true },
+      include: { flavors: includeFlavors },
     });
 
-    return {
-      ...coffee,
-      flavors: coffee.flavors.map((flavor) => flavor.name),
-    };
+    return coffee;
   }
 
-  async create(createCoffeeDto: CreateCoffeeDto): Promise<CoffeeDto> {
+  async create(
+    createCoffeeDto: CreateCoffeeDto,
+    includeFlavors: true,
+  ): Promise<CoffeeDto | CoffeeWithFlavorsDto>;
+  async create(
+    createCoffeeDto: CreateCoffeeDto,
+    includeFlavors: false,
+  ): Promise<CoffeeDto>;
+  async create(
+    createCoffeeDto: CreateCoffeeDto,
+    includeFlavors = true,
+  ): Promise<CoffeeDto | CoffeeWithFlavorsDto> {
     const coffee = await this.prismaService.coffee.create({
       data: {
         ...createCoffeeDto,
@@ -47,21 +71,34 @@ export class CoffeesService {
           })),
         },
       },
-      include: { flavors: true },
+      include: { flavors: includeFlavors },
     });
 
-    return {
-      ...coffee,
-      flavors: coffee.flavors.map((flavor) => flavor.name),
-    };
+    return coffee;
   }
 
   async update(
     id: number,
     updateCoffeeDto: UpdateCoffeeDto,
-  ): Promise<CoffeeDto> {
-    const coffee = await this.prismaService.coffee.update({
+    includeFlavors: true,
+  ): Promise<CoffeeWithFlavorsDto>;
+  async update(
+    id: number,
+    updateCoffeeDto: UpdateCoffeeDto,
+    includeFlavors: false,
+  ): Promise<CoffeeDto>;
+  async update(
+    id: number,
+    updateCoffeeDto: UpdateCoffeeDto,
+    includeFlavors = true,
+  ): Promise<CoffeeDto | CoffeeWithFlavorsDto> {
+    // TODO(Gustaf): refactor when prisma supports a deleteOrThrow
+    // https://github.com/prisma/prisma/issues/10142
+    const existingCoffee = await this.prismaService.coffee.findUniqueOrThrow({
       where: { id },
+    });
+    const coffee = await this.prismaService.coffee.update({
+      where: { id: existingCoffee.id },
       data: {
         ...updateCoffeeDto,
         // HINT: Only modify the flavors if it's present on the DTO
@@ -77,23 +114,44 @@ export class CoffeesService {
           }
           : undefined,
       },
-      include: { flavors: true },
+      include: { flavors: includeFlavors },
     });
 
-    return {
-      ...coffee,
-      flavors: coffee.flavors.map((flavor) => flavor.name),
-    };
+    return coffee;
   }
 
-  async remove(id: number): Promise<CoffeeDto> {
-    const coffee = await this.prismaService.coffee.delete({
+  async remove(id: number, includeFlavors: true): Promise<CoffeeWithFlavorsDto>;
+  async remove(id: number, includeFlavors: false): Promise<CoffeeDto>;
+  async remove(
+    id: number,
+    includeFlavors = true,
+  ): Promise<CoffeeDto | CoffeeWithFlavorsDto> {
+    // TODO(Gustaf): refactor when prisma supports a deleteOrThrow
+    // https://github.com/prisma/prisma/issues/10142
+    const existingCoffee = await this.prismaService.coffee.findUniqueOrThrow({
       where: { id },
-      include: { flavors: true },
     });
-    return {
-      ...coffee,
-      flavors: coffee.flavors.map((flavor) => flavor.name),
-    };
+    const coffee = await this.prismaService.coffee.delete({
+      where: { id: existingCoffee.id },
+      include: { flavors: includeFlavors },
+    });
+    return coffee;
+  }
+
+  async getFlavorsForCoffee(
+    coffeeId: number,
+    paginationQuery: PaginationQueryDto,
+  ) {
+    console.warn(
+      'TODO: Implement getFlavorsForCoffee',
+      coffeeId,
+      paginationQuery,
+    );
+    return [];
+    // return this.prismaService.flavor.findMany({
+    //   where: { coffee: { id: coffeeId } },
+    //   skip: paginationQuery.offset,
+    //   take: paginationQuery.limit,
+    // });
   }
 }

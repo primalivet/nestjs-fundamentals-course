@@ -29,21 +29,21 @@ export class CoffeesController {
   findAll(
     @Query() paginationQueryDto: PaginationQueryDto = { limit: 30, offset: 0 },
   ): Promise<CoffeeDto[]> {
-    return this.coffeeService.findAll(paginationQueryDto);
+    return this.coffeeService.findAll(paginationQueryDto, true);
   }
 
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, type: CoffeeDto })
   @ApiPrismaClientHttpExceptions()
   findOne(@Param('id') id: number): Promise<CoffeeDto> {
-    return this.coffeeService.findOne(id);
+    return this.coffeeService.findOne(id, true);
   }
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, type: CoffeeDto })
   @ApiPrismaClientHttpExceptions()
   create(@Body() createCoffeeDto: CreateCoffeeDto): Promise<CoffeeDto> {
-    return this.coffeeService.create(createCoffeeDto);
+    return this.coffeeService.create(createCoffeeDto, true);
   }
 
   @Patch(':id')
@@ -53,13 +53,13 @@ export class CoffeesController {
     @Param('id') id: number,
     @Body() updateCoffeeDto: UpdateCoffeeDto,
   ): Promise<CoffeeDto> {
-    return this.coffeeService.update(id, updateCoffeeDto);
+    return this.coffeeService.update(id, updateCoffeeDto, true);
   }
 
   @Delete(':id')
   @ApiResponse({ status: HttpStatus.OK })
   @ApiPrismaClientHttpExceptions()
   remove(@Param('id') id: number): Promise<CoffeeDto> {
-    return this.coffeeService.remove(id);
+    return this.coffeeService.remove(id, true);
   }
 }

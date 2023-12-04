@@ -2,89 +2,160 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type FlavorModel {
+  id: Int!
+  name: String!
+}
+
 """Good cup of brew"""
-type Coffee {
+type CoffeeModel {
   id: Int!
   name: String!
   description: String!
   brand: String!
-  flavors: [String!]!
+  flavors(before: String, after: String, first: Int, last: Int): FlavorConnection!
+}
+
+type CoffeeConnection {
+  totalCount: Int!
+  edges: [CoffeeModelEdge!]
+  pageInfo: CoffeeModelPageInfo!
+}
+
+type CoffeeModelEdge {
+  cursor: String!
+  node: CoffeeModel!
+}
+
+type CoffeeModelPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+}
+
+type FlavorConnection {
+  totalCount: Int!
+  edges: [FlavorModelEdge!]
+  pageInfo: FlavorModelPageInfo!
+}
+
+type FlavorModelEdge {
+  cursor: String!
+  node: FlavorModel!
+}
+
+type FlavorModelPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
 }
 
 type CoffeeQueries {
-  coffee(id: Int!): Coffee!
-  coffees(paginationQuery: PaginationQueryInput! = {limit: 30, offset: 0}): [Coffee!]!
-}
-
-input PaginationQueryInput {
-  limit: Int! = 30
-  offset: Int! = 0
+  coffees(before: String, after: String, first: Int, last: Int): CoffeeConnection!
+  coffee(id: Int!): CoffeeModel!
 }
 
 type CoffeeMutations {
-  create(createCoffee: CreateCoffeeInput!): Coffee!
-  update(id: Int!, updateCoffee: UpdateCoffeeInput!): Coffee!
-  delete(id: Int!): Coffee!
+  create(data: CreateCoffeeInput!): CoffeeModel!
+  update(id: Int!, data: UpdateCoffeeInput!): CoffeeModel!
+  delete(id: Int!): CoffeeModel!
 }
 
 input CreateCoffeeInput {
   name: String!
   brand: String!
-  description: String! = ""
-  flavors: [String!]!
+  description: String!
+  flavors: [String]!
 }
 
 input UpdateCoffeeInput {
   name: String
   brand: String
   description: String
-  flavors: [String!]
-}
-
-type Post {
-  id: String!
-  title: String!
-  votes: Int!
-  authorId: Int!
-}
-
-type PostQueries {
-  posts: [Post!]!
-  post(id: Float!): Post!
-}
-
-type PostMutations {
-  create(createPostInput: CreatePostInput!): Post!
-  update(id: Float!, updatePostInput: UpdatePostInput!): Post!
-}
-
-input CreatePostInput {
-  title: String!
-  votes: Int!
-  authorId: Int!
-}
-
-input UpdatePostInput {
-  title: String
-  votes: Int
-  authorId: Int
 }
 
 type User {
   id: Int!
   firstName: String!
   lastName: String!
-  posts: [Post!]!
+  posts(before: String, after: String, first: Int, last: Int): PostConnection!
+}
+
+type PostModel {
+  id: Int!
+  title: String!
+  votes: Int!
+  user: User!
+}
+
+type PostConnection {
+  totalCount: Int!
+  edges: [PostModelEdge!]
+  pageInfo: PostModelPageInfo!
+}
+
+type PostModelEdge {
+  cursor: String!
+  node: PostModel!
+}
+
+type PostModelPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+}
+
+type PostQueries {
+  posts(before: String, after: String, first: Int, last: Int): PostConnection!
+  post(id: Float!): PostModel!
+}
+
+type PostMutations {
+  create(createPostInput: CreatePostModel!): PostModel!
+  update(id: Float!, updatePostInput: UpdatePostModel!): PostModel!
+}
+
+input CreatePostModel {
+  title: String!
+  authorId: Int!
+}
+
+input UpdatePostModel {
+  title: String
+  votes: Int
+  authorId: Int
+}
+
+type UserConnection {
+  totalCount: Int!
+  edges: [UserModelEdge!]
+  pageInfo: UserModelPageInfo!
+}
+
+type UserModelEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserModelPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
 }
 
 type UserQueries {
-  users: [User!]!
+  users(before: String, after: String, first: Int, last: Int): UserConnection!
   user(id: Float!): User!
 }
 
 type UserMutations {
-  create(createUserInput: CreateUserInput!): User!
-  update(id: Int!, updateUserInput: UpdateUserDto!): User!
+  create(data: CreateUserInput!): User!
+  update(id: Int!, data: UpdateUserModel!): User!
+  remove(id: Int!): User!
 }
 
 input CreateUserInput {
@@ -92,9 +163,9 @@ input CreateUserInput {
   lastName: String!
 }
 
-input UpdateUserDto {
-  firstName: String!
-  lastName: String!
+input UpdateUserModel {
+  firstName: String
+  lastName: String
 }
 
 type Query {
